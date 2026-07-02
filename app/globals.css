@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --bg:#fdf6ee; --ink:#2e241f; --muted:#7d6a5f;
+  --peach:#ffd9b0; --orange:#e8703a; --rose:#ff6f91;
+  --card:#fffaf3; --line:#f0e2d2;
+}
+@theme inline {
+  --color-bg: var(--bg); --color-ink: var(--ink); --color-muted: var(--muted);
+  --color-peach: var(--peach); --color-orange: var(--orange); --color-rose: var(--rose);
+  --color-card: var(--card); --color-line: var(--line);
+  --font-sans: var(--font-inter); --font-display: var(--font-fraunces);
+}
