@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --bg:#fdf6ee; --ink:#2e241f; --muted:#7d6a5f;
