@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
 
 export function PostCard({ post }: { post: PostMeta }) {
-  const chip = post.type === "vlog" ? "🎬 Vlog" : "📸 Travel";
+  const chip = post.type === "vlog" ? "Vlog" : "Travel";
   return (
     <Link href={`/${post.slug}`}
       className="group block overflow-hidden rounded-2xl border border-line bg-card transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(200,110,50,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">
