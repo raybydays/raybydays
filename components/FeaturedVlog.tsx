@@ -4,16 +4,27 @@ import type { PostMeta } from "@/lib/posts";
 
 export function FeaturedVlog({ post }: { post: PostMeta }) {
   return (
-    <Link href={`/${post.slug}`}
-      className="relative block overflow-hidden rounded-3xl shadow-[0_20px_50px_rgba(200,110,50,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">
-      <Image src={post.cover} alt={post.title} width={1400} height={840} priority
-        className="h-[420px] w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/75 to-transparent" />
-      <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-2xl text-orange">▶</span>
-      <div className="absolute bottom-6 left-6 text-white">
-        <div className="text-xs uppercase tracking-widest opacity-90">Latest vlog · {post.place}</div>
-        <div className="mt-1 text-2xl font-extrabold tracking-tight">{post.title}</div>
+    <section className="border-b border-line bg-bg">
+      <div className="mx-auto grid max-w-5xl gap-10 px-7 py-20 sm:grid-cols-2 sm:items-center">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-orange">Latest vlog</p>
+          <h2 className="mt-4 font-display text-4xl font-medium leading-tight tracking-tight">{post.title}</h2>
+          <p className="mt-4 max-w-md text-muted">{post.excerpt}</p>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.1em] text-muted">
+            {post.place} — {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+          </p>
+        </div>
+        <Link
+          href={`/${post.slug}`}
+          className="group relative block overflow-hidden rounded-2xl bg-card shadow-[0_20px_50px_rgba(200,110,50,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange"
+        >
+          <Image src={post.cover} alt={post.title} width={1400} height={840} priority
+            className="h-72 w-full object-cover opacity-90 transition group-hover:opacity-100" />
+          <span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-rose px-4 py-2 text-sm font-semibold text-white shadow-lg">
+            <span aria-hidden>▶</span> Watch
+          </span>
+        </Link>
       </div>
-    </Link>
+    </section>
   );
 }

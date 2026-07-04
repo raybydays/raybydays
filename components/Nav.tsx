@@ -8,17 +8,28 @@ const links = [
 
 export function Nav() {
   return (
-    <nav className="mx-auto flex max-w-5xl items-center justify-between px-7 py-6">
-      <Link href="/" className="text-2xl font-extrabold tracking-tight">
-        ray<span className="bg-gradient-to-r from-orange to-rose bg-clip-text text-transparent">bydays</span>
-      </Link>
-      <div className="flex gap-2">
-        {links.map(l => (
-          <Link key={l.href} href={l.href}
-            className="rounded-full border border-line bg-card px-4 py-2 text-sm font-medium text-muted transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">
-            {l.label}
-          </Link>
-        ))}
+    <nav className="border-b border-white/[0.06] bg-ink">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-7 py-5">
+        <Link href="/" className="font-display text-xl italic text-bg">
+          raybydays
+        </Link>
+        <div className="flex items-center gap-7">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="text-[12.5px] font-semibold uppercase tracking-[0.08em] text-bg/85 transition hover:text-peach focus-visible:outline focus-visible:outline-2 focus-visible:outline-peach"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <a
+            href="mailto:ray@raybydays.com"
+            className="rounded-full bg-bg px-5 py-2 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-ink transition hover:bg-peach focus-visible:outline focus-visible:outline-2 focus-visible:outline-peach"
+          >
+            Subscribe
+          </a>
+        </div>
       </div>
     </nav>
   );
