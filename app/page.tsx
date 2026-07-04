@@ -2,6 +2,7 @@ import { getAllPosts, getPostsByType } from "@/lib/posts";
 import { Feed } from "@/components/Feed";
 import { FeaturedVlog } from "@/components/FeaturedVlog";
 import { Hero } from "@/components/Hero";
+import { AboutTeaser } from "@/components/AboutTeaser";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -15,11 +16,18 @@ export default function Home() {
       <section id="feed" className="bg-ink">
         <div className="mx-auto max-w-5xl px-7 py-16">
           <div className="mb-8 flex items-baseline justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-orange">Recent days</h2>
+            <h2
+              className="font-display font-normal uppercase text-bg/40"
+              style={{ letterSpacing: "0.22em", fontSize: "15px" }}
+            >
+              Recent days
+            </h2>
           </div>
           <Feed posts={posts} theme="dark" />
         </div>
       </section>
+
+      <AboutTeaser />
     </main>
   );
 }
