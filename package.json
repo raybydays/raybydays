@@ -10,7 +10,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "gray-matter": "^4.0.3",
+    "motion": "^12.42.2",
     "next": "16.2.10",
     "next-mdx-remote": "^6.0.0",
     "react": "19.2.4",

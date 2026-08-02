@@ -1,7 +1,7 @@
 import { getAllPosts, getPostsByType } from "@/lib/posts";
 import { Feed } from "@/components/Feed";
 import { FeaturedVlog } from "@/components/FeaturedVlog";
-import { Hero } from "@/components/Hero";
+import { ScrollHero } from "@/components/ScrollHero";
 import { AboutTeaser } from "@/components/AboutTeaser";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
   const featured = getPostsByType("vlog")[0];
   return (
     <main>
-      <Hero currentPlace="Singapore" />
+      <ScrollHero />
 
       {featured && <FeaturedVlog post={featured} />}
 
