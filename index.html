@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Raybydays — slow travel journal and films by Ray. Nine countries, one entry at a time.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8C%84%3C/text%3E%3C/svg%3E">
+<title>Raybydays Dispatch</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ink:#0b0f14;
+    --ink-2:#111820;
+    --dusk:#1a2430;
+    --paper:#f2ece1;
+    --paper-dim:#b9b2a6;
+    --paper-faint:#7c766c;
+    --amber:#e0662f;
+    --amber-lift:#f4a06a;
+    --sky:#7fa3b8;
+    --line:rgba(242,236,225,.14);
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Manrope', system-ui, -apple-system, sans-serif;
+    font-weight:400;
+    line-height:1.5;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::after{ /* film grain over everything */
+    content:"";position:fixed;inset:0;z-index:9;pointer-events:none;
+    background-image:var(--grain);opacity:.055;mix-blend-mode:overlay;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--amber);color:var(--ink);}
+
+  .serif{font-family:'Instrument Serif', Georgia, serif;font-weight:400;}
+  .mono{font-family:'JetBrains Mono', ui-monospace, monospace;}
+
+  /* One rule for every mono micro-label: written sentence case in the
+     markup, uppercased here. Never hardcode caps in the HTML. */
+  .label,
+  .step .t,
+  .step .num,
+  .scroll-cue,
+  .now-badge,
+  .stop .frame .cap,
+  .film .screen .meta,
+  .entry .meta,
+  .quote .src,
+  .route .rail,
+  .stat .k,
+  .statement .foot,
+  .fmeta,
+  #loader .coords{
+    text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+  .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;letter-spacing:.14em;
+    color:var(--amber);
+  }
+  .label .br{color:var(--paper-faint);}
+
+  .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,60px);}
+
+  /* ============ PRELOADER ============ */
+  #loader{
+    position:fixed;inset:0;z-index:200;
+    background:linear-gradient(180deg,#0b0f14 0%,#16202a 48%,#2a2119 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+  }
+  #loader .dial{position:relative;width:132px;height:132px;}
+  #loader .dial svg{transform:rotate(-90deg);}
+  #loader .dial circle{fill:none;stroke-width:1.5;}
+  #loader .dial .track{stroke:rgba(242,236,225,.16);}
+  #loader .dial .prog{stroke:var(--amber);stroke-linecap:round;transition:stroke-dashoffset .18s linear;}
+  #loader .pct{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Instrument Serif',serif;font-size:2rem;color:var(--paper);
+    font-variant-numeric:tabular-nums;
+  }
+  #loader .coords{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;
+    color:var(--paper-faint);text-align:center;line-height:2;
+  }
+  #loader .coords b{color:var(--paper-dim);font-weight:400;}
+  body.loaded #loader{
+    transform:translateY(-100%);
+    transition:transform 1.1s cubic-bezier(.76,0,.24,1);
+  }
+
+  /* ============ NAV ============ */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px clamp(20px,4vw,60px);
+    mix-blend-mode:difference;
+  }
+  header.nav .mark{
+    font-family:'Instrument Serif',serif;font-size:1.3rem;letter-spacing:-.01em;
+  }
+  header.nav .mark i{color:var(--amber);font-style:normal;}
+  header.nav nav{display:flex;gap:clamp(14px,2vw,30px);align-items:center;}
+  header.nav nav a{
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--paper-dim);
+    min-height:44px;display:inline-flex;align-items:center;
+  }
+  header.nav nav a:hover{color:var(--paper);}
+  /* NB: named .nav-sub, not .cta — the page already has a .cta *section*
+     whose padding would otherwise land on this link. */
+  header.nav nav a.nav-sub{color:var(--paper);border-bottom:1px solid var(--amber);}
+  @media (max-width:640px){header.nav nav a.hide-s{display:none;}}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    overflow:hidden;
+  }
+  .hero .sky{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(80% 55% at 72% 78%, rgba(224,102,47,.55) 0%, transparent 62%),
+      radial-gradient(60% 40% at 20% 30%, rgba(127,163,184,.28) 0%, transparent 60%),
+      linear-gradient(178deg,#0b0f14 6%,#16202b 42%,#2f2419 78%,#4a2b16 100%);
+  }
+  .hero .horizon{
+    position:absolute;left:0;right:0;bottom:0;height:38%;
+    background:linear-gradient(180deg, rgba(11,15,20,0) 0%, rgba(11,15,20,.72) 58%, var(--ink) 100%);
+  }
+  .hero .ridge{
+    position:absolute;left:0;right:0;bottom:26%;height:180px;opacity:.5;
+  }
+  .hero-inner{position:relative;z-index:3;padding-bottom:clamp(30px,6vh,64px);}
+  .hero h1{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(3rem,9.5vw,9.5rem);
+    line-height:.92;letter-spacing:-.025em;
+    text-wrap:balance;
+    overflow-wrap:normal;      /* never break inside a word */
+    word-break:keep-all;
+    hyphens:none;
+  }
+  .hero h1 .word{white-space:nowrap;}
+  .statement p .w{white-space:nowrap;}
+  .hero h1 em{font-style:italic;color:var(--amber-lift);}
+  .hero .sub{
+    margin-top:26px;max-width:44ch;color:var(--paper-dim);
+    font-size:clamp(.95rem,1.4vw,1.12rem);font-weight:300;
+  }
+  .hero .bottom-row{
+    margin-top:clamp(30px,5vh,54px);
+    display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
+    border-top:1px solid var(--line);padding-top:20px;
+  }
+  .scroll-cue{
+    display:flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--paper-faint);
+  }
+  .scroll-cue .bar{
+    width:52px;height:1px;background:var(--line);position:relative;overflow:hidden;
+  }
+  .scroll-cue .bar::after{
+    content:"";position:absolute;inset:0;background:var(--amber);
+    transform:translateX(-100%);animation:sweep 2.6s ease-in-out infinite;
+  }
+  @keyframes sweep{0%{transform:translateX(-100%)}55%{transform:translateX(100%)}100%{transform:translateX(100%)}}
+  .now-badge{
+    display:flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--paper-dim);
+  }
+  .now-badge .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--amber);
+    box-shadow:0 0 0 0 rgba(224,102,47,.6);animation:pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(224,102,47,.55)}
+    70%{box-shadow:0 0 0 12px rgba(224,102,47,0)}
+    100%{box-shadow:0 0 0 0 rgba(224,102,47,0)}
+  }
+
+  /* ============ MARQUEE ============ */
+  .marquee{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    overflow:hidden;padding:16px 0;background:var(--ink);
+  }
+  .marquee .track{display:flex;gap:0;width:max-content;animation:slide 42s linear infinite;}
+  .marquee span{
+    font-family:'Instrument Serif',serif;font-size:clamp(1.1rem,2vw,1.55rem);
+    font-style:italic;color:var(--paper-dim);padding:0 26px;white-space:nowrap;
+    display:flex;align-items:center;gap:26px;
+  }
+  .marquee span::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber);opacity:.7;}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ============ STATEMENT ============ */
+  .statement{padding:clamp(90px,16vh,190px) 0;}
+  .statement p{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(1.65rem,4.4vw,3.5rem);line-height:1.12;letter-spacing:-.02em;
+    max-width:19ch;
+  }
+  .statement p .w{display:inline-block;}
+  .statement p em{font-style:italic;color:var(--amber-lift);}
+  .statement .foot{
+    margin-top:38px;display:flex;gap:40px;flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--paper-faint);
+    letter-spacing:.08em;
+  }
+
+  /* ============ STATS ============ */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--line);
+  }
+  .stat{
+    padding:34px clamp(14px,2vw,28px);border-right:1px solid var(--line);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .n{
+    font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,5.4vw,4.4rem);
+    line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  }
+  .stat .n small{font-size:.42em;color:var(--amber);vertical-align:super;}
+  .stat .k{
+    margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.68rem;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--paper-faint);
+  }
+  @media (max-width:760px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(2){border-right:none;}
+    .stat:nth-child(-n+2){border-bottom:1px solid var(--line);}
+  }
+
+  /* ============ PROCESS / ANATOMY OF A DAY ============ */
+  .anatomy{padding:clamp(80px,14vh,160px) 0;}
+  .sec-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:28px;flex-wrap:wrap;margin-bottom:clamp(40px,6vh,72px);
+  }
+  .sec-head h2{
+    font-family:'Instrument Serif',serif;font-size:clamp(2rem,5vw,3.6rem);
+    line-height:1.02;letter-spacing:-.02em;max-width:14ch;
+  }
+  .sec-head h2 em{font-style:italic;color:var(--amber-lift);}
+  .sec-head .aside{max-width:34ch;color:var(--paper-dim);font-weight:300;font-size:.98rem;}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
+  .step{background:var(--ink);padding:30px 24px 34px;position:relative;transition:background .4s ease;}
+  .step:hover{background:var(--ink-2);}
+  .step .t{
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--amber);
+    letter-spacing:.1em;
+  }
+  .step h3{
+    font-family:'Instrument Serif',serif;font-size:1.65rem;margin-top:20px;
+    line-height:1.1;letter-spacing:-.01em;font-weight:400;
+  }
+  .step p{margin-top:12px;color:var(--paper-dim);font-size:.92rem;font-weight:300;}
+  .step .num{
+    position:absolute;top:26px;right:22px;
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--paper-faint);
+  }
+  @media (max-width:900px){.steps{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:540px){.steps{grid-template-columns:1fr;}}
+
+  /* ============ ROUTE (static grid — no pinning, no scroll hijack) ============ */
+  .route{background:var(--ink-2);padding:clamp(80px,14vh,150px) 0;}
+  /* Explicit column counts so five stops never leave an orphan on the last row. */
+  .route .strip{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:clamp(20px,2.4vw,30px);
+  }
+  @media (min-width:720px){ .route .strip{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:1060px){ .route .strip{grid-template-columns:repeat(5,1fr);} }
+  .stop{min-width:0;}
+  .stop .frame{
+    aspect-ratio:4/5;border-radius:2px;position:relative;overflow:hidden;
+  }
+  .stop .frame::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,15,20,0) 45%,rgba(11,15,20,.8) 100%);
+  }
+  .stop .frame .cap{
+    position:absolute;left:14px;bottom:12px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--paper-dim);
+    white-space:nowrap;
+  }
+  .stop h4{
+    font-family:'Instrument Serif',serif;font-size:1.7rem;margin-top:16px;font-weight:400;
+  }
+  .stop p{color:var(--paper-faint);font-size:.88rem;margin-top:6px;font-weight:300;}
+  .f1{background:radial-gradient(80% 60% at 30% 22%,#f0b072 0,transparent 62%),linear-gradient(158deg,#b4552c,#3a2317 70%,#171310);}
+  .f2{background:radial-gradient(75% 60% at 68% 26%,#bcd2c4 0,transparent 60%),linear-gradient(168deg,#42655c,#1b2724 68%,#121816);}
+  .f3{background:radial-gradient(80% 60% at 38% 74%,#dd9c63 0,transparent 60%),linear-gradient(150deg,#8a5637,#2a1e17 70%,#141110);}
+  .f4{background:radial-gradient(70% 55% at 62% 30%,#9fb6cc 0,transparent 60%),linear-gradient(172deg,#3c5570,#1a2330 66%,#111820);}
+  .f5{background:radial-gradient(78% 58% at 44% 68%,#e8cf94 0,transparent 60%),linear-gradient(160deg,#7d6434,#2a2417 70%,#15130f);}
+
+  .route .rail{
+    display:flex;align-items:center;gap:16px;margin-top:clamp(30px,4vh,44px);
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--paper-faint);
+  }
+  .route .rail .line{flex:1;height:1px;background:var(--line);}
+
+  /* ============ FEATURE FILM ============ */
+  .film{padding:clamp(80px,14vh,160px) 0;}
+  .film .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,64px);align-items:center;}
+  .film .screen{
+    position:relative;aspect-ratio:16/10;overflow:hidden;
+    background:radial-gradient(85% 70% at 26% 20%,#eab884 0,transparent 58%),linear-gradient(155deg,#a8512c,#432a1c 58%,#161311);
+  }
+  .film .screen .play{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  }
+  .film .screen .play .btn{
+    width:84px;height:84px;border-radius:50%;
+    border:1px solid rgba(242,236,225,.5);
+    background:rgba(11,15,20,.3);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1), background .35s ease;
+  }
+  .film .screen:hover .play .btn{transform:scale(1.1);background:rgba(224,102,47,.85);}
+  .film .screen .meta{
+    position:absolute;left:18px;bottom:16px;
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--paper-dim);
+    letter-spacing:.08em;
+  }
+  .film h3{
+    font-family:'Instrument Serif',serif;font-size:clamp(1.9rem,3.6vw,3rem);
+    line-height:1.05;margin-top:18px;letter-spacing:-.02em;font-weight:400;
+  }
+  .film p{margin-top:16px;color:var(--paper-dim);font-weight:300;max-width:40ch;}
+  .film .watch{
+    margin-top:26px;display:inline-flex;align-items:center;gap:12px;min-height:44px;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;border-bottom:1px solid var(--amber);padding-bottom:6px;
+  }
+  @media (max-width:820px){.film .grid{grid-template-columns:1fr;}}
+
+  /* ============ ENTRIES ============ */
+  .entries{padding-bottom:clamp(80px,14vh,150px);}
+  .entry{
+    display:grid;grid-template-columns:78px 1fr auto;gap:clamp(16px,3vw,40px);
+    align-items:center;padding:26px 0;border-top:1px solid var(--line);
+    transition:padding-left .4s cubic-bezier(.2,.7,.3,1);
+  }
+  .entry:last-child{border-bottom:1px solid var(--line);}
+  .entry:hover{padding-left:14px;}
+  .entry .idx{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--paper-faint);}
+  .entry .mid{min-width:0;}
+  .entry .meta{
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;
+    color:var(--sky);text-transform:uppercase;
+  }
+  .entry h4{
+    font-family:'Instrument Serif',serif;font-size:clamp(1.35rem,2.6vw,2.1rem);
+    font-weight:400;margin-top:8px;letter-spacing:-.01em;line-height:1.1;
+  }
+  .entry .snip{color:var(--paper-faint);font-size:.9rem;margin-top:6px;font-weight:300;}
+  .entry .arrow{color:var(--amber);font-size:1.2rem;transition:transform .3s ease;}
+  .entry:hover .arrow{transform:translateX(6px);}
+  @media (max-width:600px){
+    .entry{grid-template-columns:46px 1fr;}
+    .entry .arrow{display:none;}
+  }
+
+  /* ============ QUOTES ============ */
+  .quotes{padding:clamp(80px,14vh,160px) 0;border-top:1px solid var(--line);}
+  .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:48px;}
+  .quote{background:var(--ink);padding:32px 26px 34px;}
+  .quote .mark{font-family:'Instrument Serif',serif;font-size:2.6rem;color:var(--amber);line-height:.6;}
+  .quote p{
+    font-family:'Instrument Serif',serif;font-size:1.28rem;line-height:1.32;
+    margin-top:20px;font-style:italic;
+  }
+  .quote .src{
+    margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:.66rem;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--paper-faint);
+  }
+  @media (max-width:860px){.qgrid{grid-template-columns:1fr;}}
+
+  /* ============ CTA + FOOTER ============ */
+  .cta{
+    padding:clamp(90px,16vh,180px) 0 clamp(50px,8vh,90px);
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .cta::before{
+    content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);
+    width:120%;height:100%;
+    background:radial-gradient(50% 60% at 50% 100%, rgba(224,102,47,.28) 0%, transparent 70%);
+  }
+  .cta .inner{position:relative;z-index:2;}
+  .cta h2{
+    font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,7vw,5.6rem);
+    line-height:1;letter-spacing:-.025em;
+  }
+  .cta h2 em{font-style:italic;color:var(--amber-lift);}
+  .cta form{
+    margin:38px auto 0;max-width:460px;display:flex;gap:10px;
+  }
+  .cta input{
+    flex:1;min-height:52px;padding:14px 18px;
+    background:rgba(242,236,225,.06);border:1px solid var(--line);
+    color:var(--paper);font-family:'Manrope',sans-serif;font-size:.95rem;border-radius:2px;
+  }
+  .cta input::placeholder{color:var(--paper-faint);}
+  .cta input:focus{outline:2px solid var(--amber);outline-offset:1px;}
+  .cta button{
+    min-height:52px;padding:0 26px;border:none;border-radius:2px;cursor:pointer;
+    background:var(--amber);color:#150c07;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;font-weight:500;transition:background .25s ease;
+  }
+  .cta button:hover{background:var(--amber-lift);}
+  .cta .note{margin-top:16px;font-size:.8rem;color:var(--paper-faint);}
+  .cta .status{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:.74rem;min-height:1.2em;}
+  @media (max-width:520px){.cta form{flex-direction:column;}}
+
+  footer{border-top:1px solid var(--line);padding:46px 0 40px;}
+  .bigmark{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(3.4rem,17vw,13rem);line-height:.82;letter-spacing:-.04em;
+    color:var(--paper);opacity:.92;
+  }
+  .bigmark i{font-style:normal;color:var(--amber);}
+  .fmeta{
+    margin-top:34px;display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;
+    color:var(--paper-faint);text-transform:uppercase;
+  }
+  .fmeta .links{display:flex;gap:24px;}
+  .fmeta a:hover{color:var(--amber);}
+
+  .reveal{opacity:0;transform:translateY(26px);}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;scroll-behavior:auto !important;}
+    .reveal{opacity:1 !important;transform:none !important;}
+    .statement p .w{opacity:1 !important;}
+  }
+</style>
+
+</head>
+<body>
+<div id="loader">
+  <div class="dial">
+    <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
+      <circle class="track" cx="66" cy="66" r="62"></circle>
+      <circle class="prog" id="progRing" cx="66" cy="66" r="62"
+        stroke-dasharray="389.6" stroke-dashoffset="389.6"></circle>
+    </svg>
+    <div class="pct"><span id="pctNum">0</span>%</div>
+  </div>
+  <div class="coords">
+    <div>Developing the roll</div>
+    <div><b id="loadCoord">1.35°N, 103.82°E</b></div>
+  </div>
+</div>
+
+<header class="nav">
+  <a class="mark" href="#top">rayby<i>days</i></a>
+  <nav aria-label="Primary">
+    <a href="#route" class="hide-s">Route</a>
+    <a href="#film" class="hide-s">Films</a>
+    <a href="#entries" class="hide-s">Entries</a>
+    <a href="#subscribe" class="nav-sub">Subscribe</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="sky"></div>
+    <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 180 L0 96 L110 68 L228 104 L342 52 L470 92 L602 40 L742 88 L880 44 L1010 96 L1150 58 L1290 100 L1440 62 L1440 180 Z"
+        fill="#0b0f14" opacity=".55"/>
+    </svg>
+    <div class="horizon"></div>
+    <div class="hero-inner wrap">
+      <p class="label" style="margin-bottom:22px;"><span class="br">{</span> Dispatch 41. <span class="br">}</span></p>
+      <h1 id="heroLine">Days on the road, <em>in order.</em></h1>
+      <p class="sub">Slow travel, filmed where I can and written down where I can't. Nine countries so far, one entry at a time, no itinerary further out than a week.</p>
+      <div class="bottom-row">
+        <div class="scroll-cue"><span class="bar"></span> Scroll to follow</div>
+        <div class="now-badge"><span class="dot"></span> Currently · Singapore · 1.35°N, 103.82°E</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="track" id="marqueeTrack">
+      <span>Lisbon</span><span>Porto</span><span>São Miguel</span><span>Seville</span><span>Tangier</span>
+      <span>Chefchaouen</span><span>Fes</span><span>Imlil</span><span>Kyoto</span><span>Arashiyama</span>
+    </div>
+  </div>
+
+  <!-- STATEMENT -->
+  <section class="statement wrap">
+    <p id="statementText">I travel slow, film what I can, <em>and write the rest down.</em></p>
+    <div class="foot">
+      <span>Est. 2023</span>
+      <span>Based in Singapore</span>
+      <span>Written on trains, mostly</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat">
+        <div class="n"><span class="count" data-to="340">0</span></div>
+        <div class="k">Days on the road</div>
+      </div>
+      <div class="stat">
+        <div class="n"><span class="count" data-to="9">0</span></div>
+        <div class="k">Countries logged</div>
+      </div>
+      <div class="stat">
+        <div class="n"><span class="count" data-to="14">0</span></div>
+        <div class="k">Films shot and cut</div>
+      </div>
+      <div class="stat">
+        <div class="n"><span class="count" data-to="41">0</span></div>
+        <div class="k">Entries written</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANATOMY -->
+  <section class="anatomy wrap">
+    <div class="sec-head">
+      <h2>How a day becomes <em>an entry.</em></h2>
+      <p class="aside">Four things happen on every stop, in roughly this order. The writing is always last, and always late.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="t">{ Hour 01. }</span><span class="num">#. 01</span>
+        <h3>Arrive with nothing booked</h3>
+        <p>A bed for two nights and no plan past breakfast. Everything good on this site happened in the gap after that.</p>
+      </div>
+      <div class="step reveal">
+        <span class="t">{ Day 01–02. }</span><span class="num">#. 02</span>
+        <h3>Walk until the map stops helping</h3>
+        <p>Same route three mornings running. You start noticing which bakery opens first and who queues where.</p>
+      </div>
+      <div class="step reveal">
+        <span class="t">{ Day 02–04. }</span><span class="num">#. 03</span>
+        <h3>Eat the thing twice</h3>
+        <p>Once to try it, once to be sure. Most of the camera roll is food and nobody has complained yet.</p>
+      </div>
+      <div class="step reveal">
+        <span class="t">{ Later. }</span><span class="num">#. 04</span>
+        <h3>Write it on the way out</h3>
+        <p>Trains, airports, the night bus. Distance makes it clearer what actually mattered that week.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PINNED ROUTE -->
+  <section class="route" id="route">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The route <em>so far.</em></h2>
+        <p class="aside">Five recent stops, most recent first. Every one of them has an entry behind it.</p>
+      </div>
+      <div class="strip" id="routeStrip">
+        <article class="stop">
+          <div class="frame f1"><span class="cap">Jun 28</span></div>
+          <h4>Lisbon</h4><p>Three days along the coast. Too many pastries.</p>
+        </article>
+        <article class="stop">
+          <div class="frame f2"><span class="cap">Jun 15</span></div>
+          <h4>Kyoto</h4><p>Bamboo, mist, and the quietest streets I've walked.</p>
+        </article>
+        <article class="stop">
+          <div class="frame f3"><span class="cap">May 30</span></div>
+          <h4>Fes</h4><p>Lost in the medina on purpose, for four days.</p>
+        </article>
+        <article class="stop">
+          <div class="frame f4"><span class="cap">May 12</span></div>
+          <h4>São Miguel</h4><p>Volcanic lakes and no phone signal at all.</p>
+        </article>
+        <article class="stop">
+          <div class="frame f5"><span class="cap">Apr 26</span></div>
+          <h4>Imlil</h4><p>Walked up, slept badly, watched the sun hit the Atlas.</p>
+        </article>
+      </div>
+      <div class="rail">
+        <span>Nine countries logged</span>
+        <span class="line"></span>
+        <span>41 entries</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILM -->
+  <section class="film wrap" id="film">
+    <div class="sec-head">
+      <h2>Latest <em>film.</em></h2>
+      <p class="aside">Shot on one lens, cut on a laptop in a hostel kitchen. New one whenever there's enough footage worth keeping.</p>
+    </div>
+    <div class="grid">
+      <div class="screen reveal">
+        <span class="meta">Lisbon, Portugal · Jun 28 · 6:12</span>
+        <div class="play">
+          <span class="btn">
+            <svg width="20" height="22" viewBox="0 0 20 22" aria-hidden="true">
+              <path d="M2 1.6v18.8L18 11z" fill="#f2ece1"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="label"><span class="br">{</span> Film 14. <span class="br">}</span></p>
+        <h3>Three days along the Portuguese coast</h3>
+        <p>A slow evening, a camera, and too many pastries. Half of this is just the tram and a bag of custard tarts going cold on my lap.</p>
+        <a class="watch" href="#film">Watch the film →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTRIES -->
+  <section class="entries wrap" id="entries">
+    <div class="sec-head">
+      <h2>Recent <em>days.</em></h2>
+      <p class="aside">Forty-one entries and counting. The old ones stay up, typos and all.</p>
+    </div>
+    <a class="entry reveal" href="#entries">
+      <span class="idx">041</span>
+      <span class="mid">
+        <span class="meta">Lisbon, Portugal · Jun 28 · Film</span>
+        <h4>Three days along the Portuguese coast</h4>
+        <span class="snip">A slow evening, a camera, and too many pastries.</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="entry reveal" href="#entries">
+      <span class="idx">040</span>
+      <span class="mid">
+        <span class="meta">Kyoto, Japan · Jun 15 · Journal</span>
+        <h4>Slow mornings in Arashiyama</h4>
+        <span class="snip">Bamboo, mist, and the quietest streets I've walked.</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="entry reveal" href="#entries">
+      <span class="idx">039</span>
+      <span class="mid">
+        <span class="meta">Fes, Morocco · May 30 · Journal</span>
+        <h4>Getting lost in the medina, on purpose</h4>
+        <span class="snip">No map held up longer than twenty minutes. Turned out fine.</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="entry reveal" href="#entries">
+      <span class="idx">038</span>
+      <span class="mid">
+        <span class="meta">São Miguel, Azores · May 12 · Film</span>
+        <h4>Volcanic lakes and bad phone signal</h4>
+        <span class="snip">Two days off-grid, which was the entire point.</span>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <!-- QUOTES -->
+  <section class="quotes wrap">
+    <div class="sec-head">
+      <h2>Lines I kept <em>from the notebook.</em></h2>
+      <p class="aside">Scraps that didn't make it into an entry but were too good to lose.</p>
+    </div>
+    <div class="qgrid">
+      <figure class="quote reveal">
+        <span class="mark">“</span>
+        <p>The tram driver waved at the same three people every morning. By Thursday he waved at me.</p>
+        <figcaption class="src">Lisbon · Jun 26</figcaption>
+      </figure>
+      <figure class="quote reveal">
+        <span class="mark">“</span>
+        <p>Fog so thick in the bamboo that the path ahead just stopped existing. Nobody spoke.</p>
+        <figcaption class="src">Arashiyama · Jun 14</figcaption>
+      </figure>
+      <figure class="quote reveal">
+        <span class="mark">“</span>
+        <p>Asked for directions four times and got four answers. All of them were right eventually.</p>
+        <figcaption class="src">Fes · May 28</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="subscribe">
+    <div class="inner wrap">
+      <h2>Follow the days, <em>as they happen.</em></h2>
+      <form id="subForm" novalidate>
+        <label for="email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="note">One note per trip. No schedule, no sponsors, no unsubscribe guilt.</p>
+      <p class="status mono" id="subStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="bigmark">rayby<i>days</i></div>
+    <div class="fmeta">
+      <span>© 2026 Ray — made on the road</span>
+      <span class="links">
+        <a href="#film">YouTube</a>
+        <a href="#entries">Instagram</a>
+        <a href="#entries">RSS</a>
+      </span>
+      <span>Dispatch 41 · Jun 28, 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- split helpers ---------- */
+  /* Split into words FIRST, then characters inside each word.
+     Each word is an inline-block with nowrap, so a line break can only
+     land in the real spaces between words — never inside one. */
+  function splitChars(el){
+    var chars = [];
+
+    function buildInto(text, parent){
+      text.split(/(\s+)/).forEach(function(part){
+        if(part === '') return;
+        if(/^\s+$/.test(part)){
+          parent.appendChild(document.createTextNode(part));
+          return;
+        }
+        var word = document.createElement('span');
+        word.className = 'word';
+        word.style.display = 'inline-block';
+        word.style.whiteSpace = 'nowrap';
+        part.split('').forEach(function(ch){
+          var s = document.createElement('span');
+          s.className = 'ch';
+          s.style.display = 'inline-block';
+          s.textContent = ch;
+          word.appendChild(s);
+          chars.push(s);
+        });
+        parent.appendChild(word);
+      });
+    }
+
+    var frag = document.createDocumentFragment();
+    Array.prototype.slice.call(el.childNodes).forEach(function(node){
+      if(node.nodeType === 3){
+        buildInto(node.textContent, frag);
+      } else {
+        var clone = node.cloneNode(false);   // keeps <em> and its styling
+        buildInto(node.textContent, clone);
+        frag.appendChild(clone);
+      }
+    });
+
+    el.innerHTML = '';
+    el.appendChild(frag);
+    return chars;
+  }
+
+  /* ---------- preloader ---------- */
+  var coordSets = [
+    '1.35°N, 103.82°E',
+    '38.72°N, 9.14°W',
+    '35.01°N, 135.77°E',
+    '34.03°N, 5.00°W',
+    '37.74°N, 25.68°W'
+  ];
+  var pctNum = document.getElementById('pctNum');
+  var ring = document.getElementById('progRing');
+  var coordEl = document.getElementById('loadCoord');
+  var CIRC = 389.6;
+  var pct = 0;
+  var coordIdx = 0;
+
+  function finishLoad(){
+    document.body.classList.add('loaded');
+    setTimeout(function(){
+      var l = document.getElementById('loader');
+      if(l && l.parentNode) l.parentNode.removeChild(l);
+      startHero();
+      ScrollTrigger.refresh();
+    }, 1150);
+  }
+
+  if(reduce){
+    pctNum.textContent = '100';
+    finishLoad();
+  } else {
+    var tick = setInterval(function(){
+      pct += Math.random() * 9 + 3;
+      if(pct >= 100){
+        pct = 100;
+        clearInterval(tick);
+        setTimeout(finishLoad, 420);
+      }
+      pctNum.textContent = Math.floor(pct);
+      ring.style.strokeDashoffset = CIRC - (CIRC * pct / 100);
+      if(Math.floor(pct) % 22 === 0){
+        coordIdx = (coordIdx + 1) % coordSets.length;
+        coordEl.textContent = coordSets[coordIdx];
+      }
+    }, 90);
+  }
+
+  /* ---------- hero entrance ---------- */
+  function startHero(){
+    if(reduce) return;
+    var chars = splitChars(document.getElementById('heroLine'));
+    gsap.set(chars, {yPercent:110, opacity:0});
+    var tl = gsap.timeline();
+    tl.to(chars, {
+      yPercent:0, opacity:1, duration:1.05, ease:'expo.out', stagger:0.016
+    })
+    .from('.hero .sub', {y:20, opacity:0, duration:.9, ease:'power3.out'}, '-=.65')
+    .from('.hero .bottom-row', {y:16, opacity:0, duration:.8, ease:'power3.out'}, '-=.6')
+    .from('.hero .label', {opacity:0, duration:.6}, 0);
+
+    gsap.to('.hero .sky', {
+      yPercent:14, ease:'none',
+      scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}
+    });
+    gsap.to('.hero-inner', {
+      yPercent:-8, opacity:.8, ease:'none',
+      scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}
+    });
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- marquee duplicate for seamless loop ---------- */
+  var track = document.getElementById('marqueeTrack');
+  track.innerHTML = track.innerHTML + track.innerHTML;
+
+  /* Statement fades in once, as a whole. No scrub — the sentence is
+     fully legible the moment it's on screen. */
+  if(!reduce){
+    gsap.set('#statementText', {opacity:0, y:18});
+    gsap.to('#statementText', {
+      opacity:1, y:0, duration:.9, ease:'power3.out',
+      scrollTrigger:{trigger:'.statement', start:'top 80%', once:true}
+    });
+  }
+
+  /* ---------- counters ---------- */
+  document.querySelectorAll('.count').forEach(function(el){
+    var to = parseInt(el.getAttribute('data-to'), 10);
+    if(reduce){ el.textContent = to; return; }
+    var obj = {v:0};
+    ScrollTrigger.create({
+      trigger:el, start:'top 88%', once:true,
+      onEnter:function(){
+        gsap.to(obj, {
+          v:to, duration:1.6, ease:'power2.out',
+          onUpdate:function(){ el.textContent = Math.floor(obj.v); }
+        });
+      }
+    });
+  });
+
+  /* ---------- generic reveals ---------- */
+  if(!reduce){
+    gsap.utils.toArray('.reveal').forEach(function(el, i){
+      gsap.to(el, {
+        opacity:1, y:0, duration:.9, ease:'power3.out',
+        scrollTrigger:{trigger:el, start:'top 86%', once:true}
+      });
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.style.opacity = 1; });
+  }
+
+  /* Route is a plain grid — it scrolls with the page like everything else.
+     Cards get the same one-shot fade as the rest of the content. */
+  if(!reduce){
+    gsap.utils.toArray('.route .stop').forEach(function(el){
+      gsap.set(el, {opacity:0, y:22});
+      gsap.to(el, {
+        opacity:1, y:0, duration:.7, ease:'power3.out',
+        scrollTrigger:{trigger:el, start:'top 88%', once:true}
+      });
+    });
+  }
+
+  /* ---------- subscribe ---------- */
+  var form = document.getElementById('subForm');
+  var status = document.getElementById('subStatus');
+  var email = document.getElementById('email');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = email.value.trim();
+    if(!v){
+      status.style.color = '#f4a06a';
+      status.textContent = 'Enter an email address to subscribe.';
+      email.focus(); return;
+    }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      status.style.color = '#f4a06a';
+      status.textContent = 'That address is missing an @ or a domain. Check it and try again.';
+      email.focus(); return;
+    }
+    status.style.color = '#b9b2a6';
+    status.textContent = 'Subscribed. Confirmation sent to ' + v;
+    form.reset();
+  });
+})();
+</script>
+
+</body>
+</html>

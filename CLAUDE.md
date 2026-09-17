@@ -1,65 +1,40 @@
 # raybydays.com
 
-Personal travel & vlog site for Ray. Intro/about hub + an ongoing feed of travel posts and vlogs. Solo-owned, dev-authored, low maintenance.
+Personal travel & vlog site for Ray ("Raybydays Dispatch"). Solo-owned, low maintenance.
 
 ## Stack
 
-- **Next.js 15** (App Router, TypeScript) — static generation (SSG), no runtime data fetching
-- **Tailwind CSS v4** — warm-palette design tokens as CSS variables
-- **MDX** content files in `content/posts/` — no CMS, no DB
-- **Vercel** hosting (auto-deploy on push to `main`), **GitHub** version control
-- **next/font** — Fraunces (display headlines) + Inter (body/UI)
-- YouTube via a click-to-load facade (`LiteYouTube`)
+- **Single static page**: `index.html` — all HTML, CSS and JS inline. No build step, no dependencies.
+- **GSAP 3.12.5** + ScrollTrigger from cdnjs for scroll animations
+- **Google Fonts**: Instrument Serif (display), Manrope (body/UI), JetBrains Mono (labels)
+- **Vercel** hosting — static, config in `vercel.json` (no framework, no build, output `.`)
+
+## Deploy
+
+Live site is deployed with the Vercel CLI, not git auto-deploy:
+
+```
+vercel --prod
+```
+
+Run from the project root. Preview locally with `python3 -m http.server 3000`.
 
 ## Visual direction
 
-Bold/modern layout + warm palette. Big display type, cinematic featured hero, rounded cards with warm hover lift.
+Dark, cinematic, film-grain. Tokens in `:root` of `index.html`:
 
-- Canvas cream `#fdf6ee`, ink `#2e241f`, muted `#7d6a5f`
-- Accents: peach `#ffd9b0`, orange `#e8703a`, rose `#ff6f91`
-- Headline/wordmark gradient: `linear-gradient(90deg, #e8703a, #ff6f91)`
-- **Contrast rule:** orange on cream only for large headings/gradient — body text uses ink/muted (WCAG AA).
-- Reference mockup: `.superpowers/brainstorm/*/content/style-v2.html`
+- ink `#0b0f14`, ink-2 `#111820`, dusk `#1a2430`
+- paper `#f2ece1`, paper-dim `#b9b2a6`, paper-faint `#7c766c`
+- amber `#e0662f`, amber-lift `#f4a06a`, sky `#7fa3b8`
 
-## Content model
+## Page sections
 
-One MDX file per entry: `content/posts/<slug>.mdx`. Frontmatter:
-
-```yaml
-title, date (YYYY-MM-DD), place, type (travel|vlog), cover, youtube (optional), excerpt
-```
-
-Publishing flow: add a file → `git commit` → `git push` → Vercel deploys. Posts read at build time by `lib/posts.ts`, sorted date desc.
-
-## Structure
-
-- `lib/posts.ts` — single content source of truth. `getAllPosts()`, `getPostsByType(type)`, `getPost(slug)`. Types: `PostType`, `PostMeta`, `Post`.
-- `lib/site.ts` — site config (social links, url).
-- `components/` — `PostCard`, `Feed`, `FeaturedVlog`, `LiteYouTube`, `Nav`, `Footer`.
-- `app/` — `page.tsx` (home: hero + featured vlog + feed), `[slug]/page.tsx` (post detail), `travels/`, `vlogs/`, `about/`, `sitemap.ts`, `robots.ts`, `feed.xml/route.ts`.
-
-## Routes
-
-`/` · `/[slug]` · `/travels` · `/vlogs` · `/about`
-
-## Commands
-
-- `npm run dev` — dev server
-- `npm run build` — production build (verify before commit)
-- `npm test` — Vitest (content lib + component tests)
-- `npm run lint`
+Nav → hero → statement → anatomy ("How a day becomes…") → route → film → entries ("Recent") → quotes ("Lines I kept") → subscribe CTA → footer.
 
 ## Conventions
 
-- TDD: failing test → minimal impl → pass → commit. Atomic commits per feature.
 - Every image has alt text; visible focus; `prefers-reduced-motion` honored.
-- SSG only — no runtime fetching, no DB, no CMS.
 
-## Out of scope (YAGNI)
+## History
 
-No CMS, DB, comments, auth, newsletter, search. Revisit only on real need.
-
-## Docs
-
-- Design spec: `docs/superpowers/specs/2026-07-02-raybydays-personal-site-design.md`
-- Implementation plan: `docs/superpowers/plans/2026-07-02-raybydays-personal-site.md`
+Previous Next.js 15 + MDX version lives on branch `nextjs-backup`. Its design docs remain in `docs/superpowers/`.
