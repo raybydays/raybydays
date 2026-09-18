@@ -11,13 +11,11 @@ Personal travel & vlog site for Ray ("Raybydays Dispatch"). Solo-owned, low main
 
 ## Deploy
 
-Live site is deployed with the Vercel CLI, not git auto-deploy:
+Push to `main` — Vercel is connected to `github.com/raybydays/raybydays` and auto-deploys production.
 
-```
-vercel --prod
-```
+Preview locally with `python3 -m http.server 3000` from the project root.
 
-Run from the project root. Preview locally with `python3 -m http.server 3000`.
+(`vercel --prod` also still works for a direct upload, but git push is the normal path.)
 
 ## Visual direction
 
