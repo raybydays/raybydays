@@ -53,7 +53,7 @@
   .scroll-cue,
   .now-badge,
   .stop .frame .cap,
-  .film .screen .meta,
+  .hero-film .screen .meta,
   .entry .meta,
   .quote .src,
   .route .rail,
@@ -142,11 +142,11 @@
   .hero .ridge{
     position:absolute;left:0;right:0;bottom:26%;height:180px;opacity:.5;
   }
-  .hero-inner{position:relative;z-index:3;padding-bottom:clamp(30px,6vh,64px);}
+  .hero-inner{position:relative;z-index:3;padding-block:clamp(88px,12vh,120px) clamp(30px,6vh,64px);}
   .hero h1{
     font-family:'Instrument Serif',serif;
-    font-size:clamp(3rem,9.5vw,9.5rem);
-    line-height:.92;letter-spacing:-.025em;
+    font-size:clamp(2.6rem,6.4vw,6rem);
+    line-height:.94;letter-spacing:-.025em;
     text-wrap:balance;
     overflow-wrap:normal;      /* never break inside a word */
     word-break:keep-all;
@@ -156,9 +156,60 @@
   .statement p .w{white-space:nowrap;}
   .hero h1 em{font-style:italic;color:var(--amber-lift);}
   .hero .sub{
-    margin-top:26px;max-width:44ch;color:var(--paper-dim);
+    margin-top:24px;max-width:38ch;color:var(--paper-dim);
     font-size:clamp(.95rem,1.4vw,1.12rem);font-weight:300;
   }
+
+  /* The latest film rides in the hero — same card language as before,
+     just promoted above the fold. There is no standalone film section. */
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr .95fr;
+    gap:clamp(28px,4vw,56px);align-items:end;
+  }
+  .hero-film .screen{
+    position:relative;aspect-ratio:16/10;overflow:hidden;
+    background:radial-gradient(85% 70% at 26% 20%,#eab884 0,transparent 58%),linear-gradient(155deg,#a8512c,#432a1c 58%,#161311);
+  }
+  .hero-film .screen .play{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  }
+  .hero-film .screen .play .btn{
+    width:clamp(58px,5vw,84px);height:clamp(58px,5vw,84px);border-radius:50%;
+    border:1px solid rgba(242,236,225,.5);
+    background:rgba(11,15,20,.3);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1), background .35s ease;
+  }
+  .hero-film .screen:hover .play .btn{transform:scale(1.1);background:rgba(224,102,47,.85);}
+  .hero-film .screen .meta{
+    position:absolute;left:18px;bottom:16px;
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--paper-dim);
+    letter-spacing:.08em;
+  }
+  .hero-film .film-no{margin-top:18px;}
+  .hero-film h2{
+    font-family:'Instrument Serif',serif;font-size:clamp(1.35rem,2.1vw,1.9rem);
+    line-height:1.08;margin-top:10px;letter-spacing:-.02em;font-weight:400;
+  }
+  .hero-film .watch{
+    margin-top:16px;display:inline-flex;align-items:center;gap:12px;min-height:44px;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;border-bottom:1px solid var(--amber);padding-bottom:6px;
+  }
+  /* One column below 900px: the card leads, the headline follows.
+     Everything tightens so hero + card still land inside one screen. */
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:22px;}
+    .hero-film{order:-1;}
+    .hero-film .screen{aspect-ratio:16/9;}
+    .hero-film .film-no{margin-top:14px;}
+    .hero-film .watch{margin-top:12px;}
+    .hero-inner{padding-block:clamp(64px,9vh,88px) clamp(22px,4vh,40px);}
+    .hero .sub{margin-top:16px;}
+    .hero .bottom-row{margin-top:22px;padding-top:16px;}
+  }
+
   .hero .bottom-row{
     margin-top:clamp(30px,5vh,54px);
     display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
@@ -315,41 +366,6 @@
   }
   .route .rail .line{flex:1;height:1px;background:var(--line);}
 
-  /* ============ FEATURE FILM ============ */
-  .film{padding-block:clamp(80px,14vh,160px);}
-  .film .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,64px);align-items:center;}
-  .film .screen{
-    position:relative;aspect-ratio:16/10;overflow:hidden;
-    background:radial-gradient(85% 70% at 26% 20%,#eab884 0,transparent 58%),linear-gradient(155deg,#a8512c,#432a1c 58%,#161311);
-  }
-  .film .screen .play{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  }
-  .film .screen .play .btn{
-    width:84px;height:84px;border-radius:50%;
-    border:1px solid rgba(242,236,225,.5);
-    background:rgba(11,15,20,.3);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-    display:flex;align-items:center;justify-content:center;
-    transition:transform .35s cubic-bezier(.2,.7,.3,1), background .35s ease;
-  }
-  .film .screen:hover .play .btn{transform:scale(1.1);background:rgba(224,102,47,.85);}
-  .film .screen .meta{
-    position:absolute;left:18px;bottom:16px;
-    font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--paper-dim);
-    letter-spacing:.08em;
-  }
-  .film h3{
-    font-family:'Instrument Serif',serif;font-size:clamp(1.9rem,3.6vw,3rem);
-    line-height:1.05;margin-top:18px;letter-spacing:-.02em;font-weight:400;
-  }
-  .film p{margin-top:16px;color:var(--paper-dim);font-weight:300;max-width:40ch;}
-  .film .watch{
-    margin-top:26px;display:inline-flex;align-items:center;gap:12px;min-height:44px;
-    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;
-    text-transform:uppercase;border-bottom:1px solid var(--amber);padding-bottom:6px;
-  }
-  @media (max-width:820px){.film .grid{grid-template-columns:1fr;}}
 
   /* ============ ENTRIES ============ */
   .entries{padding-bottom:clamp(80px,14vh,150px);}
@@ -490,9 +506,28 @@
     </svg>
     <div class="horizon"></div>
     <div class="hero-inner wrap">
-      <p class="label" style="margin-bottom:22px;"><span class="br">{</span> Dispatch 41. <span class="br">}</span></p>
-      <h1 id="heroLine">Days on the road, <em>in order.</em></h1>
-      <p class="sub">Slow travel, filmed where I can and written down where I can't. Nine countries so far, one entry at a time, no itinerary further out than a week.</p>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="label" style="margin-bottom:22px;"><span class="br">{</span> Dispatch 41. <span class="br">}</span></p>
+          <h1 id="heroLine">Days on the road, <em>in order.</em></h1>
+          <p class="sub">Slow travel, filmed where I can and written down where I can't. Nine countries so far, one entry at a time, no itinerary further out than a week.</p>
+        </div>
+        <div class="hero-film" id="film">
+          <div class="screen">
+            <span class="meta">Lisbon, Portugal · Jun 28 · 6:12</span>
+            <div class="play">
+              <span class="btn">
+                <svg width="20" height="22" viewBox="0 0 20 22" aria-hidden="true">
+                  <path d="M2 1.6v18.8L18 11z" fill="#f2ece1"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <p class="label film-no"><span class="br">{</span> Film 14. <span class="br">}</span></p>
+          <h2>Three days along the Portuguese coast</h2>
+          <a class="watch" href="#film">Watch the film →</a>
+        </div>
+      </div>
       <div class="bottom-row">
         <div class="scroll-cue"><span class="bar"></span> Scroll to follow</div>
         <div class="now-badge"><span class="dot"></span> Currently · Singapore · 1.35°N, 103.82°E</div>
@@ -603,32 +638,6 @@
         <span>Nine countries logged</span>
         <span class="line"></span>
         <span>41 entries</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- FILM -->
-  <section class="film wrap" id="film">
-    <div class="sec-head">
-      <h2>Latest <em>film.</em></h2>
-      <p class="aside">Shot on one lens, cut on a laptop in a hostel kitchen. New one whenever there's enough footage worth keeping.</p>
-    </div>
-    <div class="grid">
-      <div class="screen reveal">
-        <span class="meta">Lisbon, Portugal · Jun 28 · 6:12</span>
-        <div class="play">
-          <span class="btn">
-            <svg width="20" height="22" viewBox="0 0 20 22" aria-hidden="true">
-              <path d="M2 1.6v18.8L18 11z" fill="#f2ece1"/>
-            </svg>
-          </span>
-        </div>
-      </div>
-      <div class="reveal">
-        <p class="label"><span class="br">{</span> Film 14. <span class="br">}</span></p>
-        <h3>Three days along the Portuguese coast</h3>
-        <p>A slow evening, a camera, and too many pastries. Half of this is just the tram and a bag of custard tarts going cold on my lap.</p>
-        <a class="watch" href="#film">Watch the film →</a>
       </div>
     </div>
   </section>
@@ -839,6 +848,7 @@
       yPercent:0, opacity:1, duration:1.05, ease:'expo.out', stagger:0.016
     })
     .from('.hero .sub', {y:20, opacity:0, duration:.9, ease:'power3.out'}, '-=.65')
+    .from('.hero-film', {y:18, opacity:0, duration:.9, ease:'power3.out'}, '-=.7')
     .from('.hero .bottom-row', {y:16, opacity:0, duration:.8, ease:'power3.out'}, '-=.6')
     .from('.hero .label', {opacity:0, duration:.6}, 0);
 
