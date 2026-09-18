@@ -31,7 +31,15 @@ Nav → hero → statement → anatomy ("How a day becomes…") → route → fi
 
 ## Conventions
 
+- Edit `index.html` directly — keep CSS/JS inline, no build step, no package.json.
 - Every image has alt text; visible focus; `prefers-reduced-motion` honored.
+- Show a visual preview (screenshot, desktop + mobile) before every commit of UI changes.
+- Repo is the source of truth now — but before big changes, confirm live matches `index.html`
+  (`curl -s https://raybydays.com/ | shasum`), since the site was once deployed outside git.
+
+## Out of scope (YAGNI)
+
+No framework, CMS, DB, comments, auth, search. Revisit only on real need.
 
 ## History
 
