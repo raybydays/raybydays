@@ -34,8 +34,9 @@ Nav → hero → statement → anatomy ("How a day becomes…") → route → fi
 - Edit `index.html` directly — keep CSS/JS inline, no build step, no package.json.
 - Every image has alt text; visible focus; `prefers-reduced-motion` honored.
 - Show a visual preview (screenshot, desktop + mobile) before every commit of UI changes.
-- Repo is the source of truth now — but before big changes, confirm live matches `index.html`
-  (`curl -s https://raybydays.com/ | shasum`), since the site was once deployed outside git.
+- Repo is the source of truth. To check what's actually live, open https://raybydays.com/ in a
+  browser and inspect the DOM — `curl` gets Vercel's bot-challenge page (`x-vercel-mitigated:
+  challenge`), not the site, so grepping or hashing its output is meaningless.
 
 ## Out of scope (YAGNI)
 
