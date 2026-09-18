@@ -162,10 +162,14 @@
 
   /* The latest film rides in the hero — same card language as before,
      just promoted above the fold. There is no standalone film section. */
+  .hero-dispatch{margin-bottom:22px;}
+  /* Both columns start on the same line. The negative margin pulls the
+     headline's cap-height — not its line box — level with the card's top. */
   .hero-grid{
     display:grid;grid-template-columns:1.05fr .95fr;
-    gap:clamp(28px,4vw,56px);align-items:end;
+    gap:clamp(28px,4vw,56px);align-items:start;
   }
+  .hero-copy h1{margin-top:-.08em;}
   .hero-film .screen{
     position:relative;aspect-ratio:16/10;overflow:hidden;
     background:radial-gradient(85% 70% at 26% 20%,#eab884 0,transparent 58%),linear-gradient(155deg,#a8512c,#432a1c 58%,#161311);
@@ -506,9 +510,9 @@
     </svg>
     <div class="horizon"></div>
     <div class="hero-inner wrap">
+      <p class="label hero-dispatch"><span class="br">{</span> Dispatch 41. <span class="br">}</span></p>
       <div class="hero-grid">
         <div class="hero-copy">
-          <p class="label" style="margin-bottom:22px;"><span class="br">{</span> Dispatch 41. <span class="br">}</span></p>
           <h1 id="heroLine">Days on the road, <em>in order.</em></h1>
           <p class="sub">Slow travel, filmed where I can and written down where I can't. Nine countries so far, one entry at a time, no itinerary further out than a week.</p>
         </div>
