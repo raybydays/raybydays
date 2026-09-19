@@ -105,6 +105,17 @@
     display:flex;align-items:center;justify-content:space-between;
     padding:22px clamp(20px,4vw,60px);
     mix-blend-mode:difference;
+    transition:background .35s ease, padding .35s ease, border-color .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  /* Past the hero the nav needs a floor: difference blending against a
+     scrolling headline slices both. Solid band, no blend, content behind. */
+  header.nav.docked{
+    mix-blend-mode:normal;
+    background:rgba(11,15,20,.82);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border-bottom-color:var(--line);
+    padding-top:14px;padding-bottom:14px;
   }
   header.nav .mark{
     font-family:'Instrument Serif',serif;font-size:1.3rem;letter-spacing:-.01em;
@@ -872,6 +883,19 @@
   }
 
   gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- nav docks once the hero is behind you ----------
+     Plain scroll listener rather than a ScrollTrigger: this has to stay
+     correct through font swaps and resizes, and it must not depend on a
+     refresh having run. */
+  var navEl = document.querySelector('header.nav');
+  var heroEl = document.querySelector('.hero');
+  function syncNav(){
+    navEl.classList.toggle('docked', window.scrollY > heroEl.offsetHeight - 80);
+  }
+  window.addEventListener('scroll', syncNav, {passive:true});
+  window.addEventListener('resize', syncNav);
+  syncNav();
 
   /* ---------- marquee duplicate for seamless loop ---------- */
   var track = document.getElementById('marqueeTrack');
