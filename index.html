@@ -357,7 +357,11 @@
   .stop h4{
     font-family:'Instrument Serif',serif;font-size:1.7rem;margin-top:16px;font-weight:400;
   }
-  .stop p{color:var(--paper-faint);font-size:.88rem;margin-top:6px;font-weight:300;}
+  /* Place only — the stories live in Recent days, not here. */
+  .stop .where{
+    font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--paper-faint);margin-top:6px;
+  }
   .f1{background:radial-gradient(80% 60% at 30% 22%,#f0b072 0,transparent 62%),linear-gradient(158deg,#b4552c,#3a2317 70%,#171310);}
   .f2{background:radial-gradient(75% 60% at 68% 26%,#bcd2c4 0,transparent 60%),linear-gradient(168deg,#42655c,#1b2724 68%,#121816);}
   .f3{background:radial-gradient(80% 60% at 38% 74%,#dd9c63 0,transparent 60%),linear-gradient(150deg,#8a5637,#2a1e17 70%,#141110);}
@@ -384,8 +388,9 @@
   .entry .mid{min-width:0;}
   .entry .meta{
     font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;
-    color:var(--sky);text-transform:uppercase;
+    color:var(--paper-faint);text-transform:uppercase;
   }
+  .entry .meta b{color:var(--amber);font-weight:400;}
   .entry h4{
     font-family:'Instrument Serif',serif;font-size:clamp(1.35rem,2.6vw,2.1rem);
     font-weight:400;margin-top:8px;letter-spacing:-.01em;line-height:1.1;
@@ -614,28 +619,28 @@
     <div class="wrap">
       <div class="sec-head">
         <h2>The route <em>so far.</em></h2>
-        <p class="aside">Five recent stops, most recent first. Every one of them has an entry behind it.</p>
+        <p class="aside">The last five stops, most recent first.</p>
       </div>
       <div class="strip" id="routeStrip">
         <article class="stop">
           <div class="frame f1"><span class="cap">Jun 28</span></div>
-          <h4>Lisbon</h4><p>Three days along the coast. Too many pastries.</p>
+          <h4>Lisbon</h4><p class="where">Portugal</p>
         </article>
         <article class="stop">
           <div class="frame f2"><span class="cap">Jun 15</span></div>
-          <h4>Kyoto</h4><p>Bamboo, mist, and the quietest streets I've walked.</p>
+          <h4>Kyoto</h4><p class="where">Japan</p>
         </article>
         <article class="stop">
           <div class="frame f3"><span class="cap">May 30</span></div>
-          <h4>Fes</h4><p>Lost in the medina on purpose, for four days.</p>
+          <h4>Fes</h4><p class="where">Morocco</p>
         </article>
         <article class="stop">
           <div class="frame f4"><span class="cap">May 12</span></div>
-          <h4>São Miguel</h4><p>Volcanic lakes and no phone signal at all.</p>
+          <h4>São Miguel</h4><p class="where">Azores</p>
         </article>
         <article class="stop">
           <div class="frame f5"><span class="cap">Apr 26</span></div>
-          <h4>Imlil</h4><p>Walked up, slept badly, watched the sun hit the Atlas.</p>
+          <h4>Imlil</h4><p class="where">Morocco</p>
         </article>
       </div>
       <div class="rail">
@@ -655,36 +660,36 @@
     <a class="entry reveal" href="#entries">
       <span class="idx">041</span>
       <span class="mid">
-        <span class="meta">Lisbon, Portugal · Jun 28 · Film</span>
+        <span class="meta"><b>Film</b> · Jun 28 · Lisbon</span>
         <h4>Three days along the Portuguese coast</h4>
-        <span class="snip">A slow evening, a camera, and too many pastries.</span>
+        <span class="snip">The cut runs six minutes. It took four days of tram rides to find them.</span>
       </span>
       <span class="arrow">→</span>
     </a>
     <a class="entry reveal" href="#entries">
       <span class="idx">040</span>
       <span class="mid">
-        <span class="meta">Kyoto, Japan · Jun 15 · Journal</span>
-        <h4>Slow mornings in Arashiyama</h4>
-        <span class="snip">Bamboo, mist, and the quietest streets I've walked.</span>
+        <span class="meta"><b>Journal</b> · Jun 15 · Kyoto</span>
+        <h4>What I learned queuing for breakfast</h4>
+        <span class="snip">Three mornings, same bakery, and the only Japanese I actually retained.</span>
       </span>
       <span class="arrow">→</span>
     </a>
     <a class="entry reveal" href="#entries">
       <span class="idx">039</span>
       <span class="mid">
-        <span class="meta">Fes, Morocco · May 30 · Journal</span>
+        <span class="meta"><b>Journal</b> · May 30 · Fes</span>
         <h4>Getting lost in the medina, on purpose</h4>
-        <span class="snip">No map held up longer than twenty minutes. Turned out fine.</span>
+        <span class="snip">Every direction I was given turned out to be right, eventually.</span>
       </span>
       <span class="arrow">→</span>
     </a>
     <a class="entry reveal" href="#entries">
       <span class="idx">038</span>
       <span class="mid">
-        <span class="meta">São Miguel, Azores · May 12 · Film</span>
-        <h4>Volcanic lakes and bad phone signal</h4>
-        <span class="snip">Two days off-grid, which was the entire point.</span>
+        <span class="meta"><b>Film</b> · May 12 · São Miguel</span>
+        <h4>Two days without a phone signal</h4>
+        <span class="snip">What happens to a shooting plan when nothing can interrupt it.</span>
       </span>
       <span class="arrow">→</span>
     </a>
