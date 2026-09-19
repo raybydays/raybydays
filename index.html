@@ -387,7 +387,9 @@
 
 
   /* ============ ENTRIES ============ */
-  .entries{padding-bottom:clamp(80px,14vh,150px);}
+  /* Symmetric like every other section — the heading sits at the colour
+     seam with the route otherwise, which reads as cramped. */
+  .entries{padding-block:clamp(80px,14vh,150px);}
   .entry{
     display:grid;grid-template-columns:78px 1fr auto;gap:clamp(16px,3vw,40px);
     align-items:center;padding:26px 0;border-top:1px solid var(--line);
